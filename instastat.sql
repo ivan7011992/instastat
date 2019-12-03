@@ -25,6 +25,9 @@ DROP TABLE IF EXISTS `app_users`;
 CREATE TABLE `app_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `area` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -35,7 +38,7 @@ CREATE TABLE `app_users` (
 
 LOCK TABLES `app_users` WRITE;
 /*!40000 ALTER TABLE `app_users` DISABLE KEYS */;
-INSERT INTO `app_users` VALUES (1,'eer');
+INSERT INTO `app_users` VALUES (1,'eer',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `app_users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -48,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-11-28 19:45:00
+-- Dump completed on 2019-12-03 10:28:15

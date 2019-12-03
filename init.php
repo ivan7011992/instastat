@@ -3,10 +3,10 @@
 
 
 
-$con = mysqli_connect("localhost", "root", "root", "things");
+$con = mysqli_connect("localhost", "root", "root", "instastat");
 
 if ($con === false) {
-    print("������ �����������:" . mysqli_connect_error());
+    print("Ошибка подключения:" . mysqli_connect_error());
     die;
 }
 
