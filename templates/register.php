@@ -1,3 +1,5 @@
+
+
 <html>
 <head>
     <title>Анкета</title>
@@ -31,9 +33,9 @@
                aria-describedby="emailHelp"
                placeholder="Ввеите имя"
                value="<?= $name['name'] ?? '' ?>">
-        <?php if (array_key_exists('reg-name', $errors)): ?>
-            <p> <?= $errors['reg-name'] ?></p>
-        <?php endif ?>
+<!--        --><?php //if (array_key_exists('reg-name', $errors)): ?>
+<!--            <p> --><?//= $errors['reg-name'] ?><!--</p>-->
+<!--        --><?php //endif ?><!-- -->
         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
     </div>
     <div class="form-group">
@@ -44,9 +46,9 @@
                 id="Area"
                 placeholder="Укажите район проживания"
                 value="<?= $Area['reg-area'] ?? '' ?>">
-        <?php if (array_key_exists('reg-area', $errors)): ?>
-            <p class="form__message">Введите район</p><?= $errors['area'] ?></p>
-        <?php endif ?>
+<!--        --><?php //if (array_key_exists('reg-area', $errors)): ?>
+<!--            <p class="form__message">Введите район</p>--><?//= $errors['area'] ?><!--</p>-->
+<!--        --><?php //endif ?>
     </div>
     <div class="form-group">
         <label for="password">Пароль</label>
@@ -56,9 +58,9 @@
                 id="password"
                 placeholder="Введите пароль"
                 value="<?= $password['reg-password'] ?? '' ?>">
-        <?php if (array_key_exists('reg-password', $errors)): ?>
-            <p class="form__message">Пароль</p><?= $errors['password'] ?></p>
-        <?php endif ?>
+<!--        --><?php //if (array_key_exists('reg-password', $errors)): ?>
+<!--            <p class="form__message">Пароль</p>--><?//= $errors['password'] ?><!--</p>-->
+<!--        --><?php //endif ?>
     </div>
 
     <div class="form-group">
@@ -69,9 +71,9 @@
                 id="email"
                 placeholder="Введите email"
                 value="<?= $password['reg-email'] ?? '' ?>">
-        <?php if (array_key_exists('reg-email', $errors)): ?>
-            <p class="form__message">Пароль</p><?= $errors['reg-email'] ?></p>
-        <?php endif ?>
+<!--        --><?php //if (array_key_exists('reg-email', $errors)): ?>
+<!--            <p class="form__message">Пароль</p>--><?//= $errors['reg-email'] ?><!--</p>-->
+<!--        --><?php //endif ?>
     </div>
 
     <?php if (!empty($errors)): ?>

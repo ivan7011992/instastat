@@ -1,10 +1,10 @@
 <?php
-require_once("init.php");
-require_once("helpers.php");
+require_once("C:\Users\ivasilev\Desktop\OSPanel\domains\instastat\init.php");
+require_once("C:\Users\ivasilev\Desktop\OSPanel\domains\instastat\helpers.php");
 
 
 $errors = [];
-
+$con = mysqli_connect("localhost", "root", "", "instastat");
 function CheckErrorsReg($con)
 {
 
@@ -20,10 +20,6 @@ function CheckErrorsReg($con)
         $errors['reg-password'] = $Regresult = 'Введите пароль';
     }
 
-    if (empty($_POST ['reg-phone'])) {
-        $errors['reg-phone'] = 'Введите телефон';
-    }
-
 
     if (empty($_POST['reg-email'])) {
         $errors['reg-email'] = 'Введите почту';
@@ -32,6 +28,7 @@ function CheckErrorsReg($con)
     return $errors;
 }
 
+$errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -42,8 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['reg-email'];
 
 
-
     if (count($errors) === 0) {
+        $errors = [];
 
         $Regresult = 'Абонент зарегистрирован';
         $stmt = db_get_prepare_stmt($con, "INSERT INTO app_users (name,area,password,email) VALUES (?,?,?,?)", [
@@ -52,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $area,
             $password,
             $email
-
 
 
         ]);
@@ -66,17 +62,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+$errors []= null;
 
-$content = include_template('register.php',[
+    $content = include_template('register.php', [
 
-        'errors' =>$errors,
-        'name' =>$name,
-         'area' =>$area,
-         'password' =>$password,
-         'email' =>$email
+        'errors' => $errors,
+        'name' => $name,
+        'area' => $area,
+        'password' => $password,
+        'email' => $email
 
 
-]);
+    ]);
 
-echo $content;
+    echo $content;
 
