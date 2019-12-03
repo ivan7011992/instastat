@@ -128,11 +128,11 @@ function get_noun_plural_form(int $number, string $one, string $two, string $man
  */
 function include_template($name, array $data = [])
 {
-    $name = 'templates/' . $name;
+    $name = __DIR__ . '/templates/' . $name;
     $result = '';
 
-    if (!is_readable($name)) {
-        return $result;
+    if (!file_exists($name)) {
+        return sprintf('File %s is not available', $name);
     }
 
     ob_start();

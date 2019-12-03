@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ) {
 
 </head>
 <body>
-<a href="templates/register.php">Регистрация</a>
+<a href="controllers/register.php">Регистрация</a>
 
 
 <form method="POST" enctype="multipart/form-data" action="index.php">

@@ -1,56 +1,51 @@
 <?php
-require_once("C:\Users\ivasilev\Desktop\OSPanel\domains\instastat\init.php");
-require_once("C:\Users\ivasilev\Desktop\OSPanel\domains\instastat\helpers.php");
+require_once("./../init.php");
+require_once("./../helpers.php");
 
-
-$errors = [];
-$con = mysqli_connect("localhost", "root", "", "instastat");
-function CheckErrorsReg($con)
+function CheckErrorsReg($data)
 {
 
     $errors = [];
 
-    if (empty($_POST['reg-name'])) {
+    if (empty($data['reg-name'])) {
         $errors['reg-name'] = $Regresult = 'Введите инициалы';
     }
-    if (empty($_POST['reg-area'])) {
+    if (empty($data['reg-area'])) {
         $errors['reg-area'] = $Regresult = 'Введите район проживания';
     }
-    if (empty($_POST['reg-password'])) {
+    if (empty($data['reg-password'])) {
         $errors['reg-password'] = $Regresult = 'Введите пароль';
     }
-
-
-    if (empty($_POST['reg-email'])) {
+    if (empty($data['reg-email'])) {
         $errors['reg-email'] = 'Введите почту';
+    }
+    if($data['password'] != $data['passwordConfirmation']) {
+
     }
 
     return $errors;
 }
 
 $errors = [];
+$formData = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $errors = checkErrorsReg($con);
-    $name = $_POST['reg-name'];
-    $area = $_POST['reg-area'];
-    $password = $_POST['reg-password'];
-    $email = $_POST['reg-email'];
+    $formData = [
+        'name' => $_POST['reg-name'],
+        'area' => $_POST['reg-area'],
+        'password' => $_POST['reg-password'],
+        'passwordConfirmation' => $_POST['reg-password-confimation'],
+        'email' => $_POST['reg-email']
+    ];
 
+    $errors = checkErrorsReg($formData);
 
     if (count($errors) === 0) {
-        $errors = [];
-
-        $Regresult = 'Абонент зарегистрирован';
-        $stmt = db_get_prepare_stmt($con, "INSERT INTO app_users (name,area,password,email) VALUES (?,?,?,?)", [
-
-            $name,
-            $area,
-            $password,
-            $email
-
-
+        $stmt = db_get_prepare_stmt($con, "INSERT INTO app_users (name,password,email) VALUES (?,?,?)", [
+            $formData['name'],
+            password_hash($formData['password'],PASSWORD_DEFAULT),
+            $formData['email']
         ]);
         if (!$stmt) {
             $error = mysqli_error($con);
@@ -58,22 +53,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             die;
         }
         $insertResult = mysqli_stmt_execute($stmt);
-        header("Location: /sucsess.php", true, 301);
+        header("Location: /index.php", true, 301);
         exit;
     }
 }
-$errors []= null;
 
-    $content = include_template('register.php', [
+$content = include_template('register.php', [
+    'errors' => $errors,
+    'formData' => $formData,
+]);
 
-        'errors' => $errors,
-        'name' => $name,
-        'area' => $area,
-        'password' => $password,
-        'email' => $email
+echo $content;
 
-
-    ]);
-
-    echo $content;
 
