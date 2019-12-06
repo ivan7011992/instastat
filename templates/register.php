@@ -1,4 +1,4 @@
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Анкета</title>
     <meta charset="utf-8">
@@ -15,7 +15,12 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
+<style>
+    .form_error{
+    color: red;
 
+    }
+</style>
 
 </head>
 <body>
@@ -38,23 +43,12 @@
                        placeholder="Ввеите имя"
                        value="<?= $formData['name'] ?? '' ?>">
                 <?php if (array_key_exists('reg-name', $errors)): ?>
-                    <p> <?= $errors['reg-name'] ?></p>
+                    <p class="form_error"> <?= $errors['reg-name'] ?></p>
                 <?php endif ?>
                 <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.
                 </small>
             </div>
-            <div class="form-group">
-                <label for="Area">Район</label>
-                <input name='reg-area'
-                       type="text"
-                       class="form-control"
-                       id="Area"
-                       placeholder="Укажите район проживания"
-                       value="<?= $formData['area'] ?? '' ?>">
-                <?php if (array_key_exists('reg-area', $errors)): ?>
-                    <p class="form__message">Введите район</p><?= $errors['reg-area'] ?></p>
-                <?php endif ?>
-            </div>
+
             <div class="form-group">
                 <label for="password">Пароль</label>
                 <input name='reg-password'
@@ -64,12 +58,24 @@
                        placeholder="Введите пароль"
                 ">
                 <?php if (array_key_exists('reg-password', $errors)): ?>
-                    <p class="form__message">Пароль</p><?= $errors['reg-password'] ?></p>
+                    <p class="form_error"> <?= $errors['reg-password'] ?></p>
                 <?php endif ?>
             </div>
-
             <div class="form-group">
-                <label for="emsil">Email</label>
+                <label for="passwordConfirmation">Подтверждение пароля</label>
+                <input name='passwordConfirmation'
+                       type="password"
+                       class="form-control"
+                       id="passwordConfirmation"
+                       placeholder="Введите пароль"
+
+                ">
+                <?php if (array_key_exists('passwordConfirmation', $errors)): ?>
+                    <p class = "form_error"> <?= $errors['passwordConfirmation'] ?></p>
+                <?php endif ?>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
                 <input name='reg-email'
                        type="email"
                        class="form-control"
@@ -77,7 +83,7 @@
                        placeholder="Введите email"
                        value="<?= $formData['email'] ?? '' ?>">
                 <?php if (array_key_exists('reg-email', $errors)): ?>
-                    <p class="form__message">Пароль</p><?= $errors['reg-email'] ?></p>
+                    <p class="form_error"> <?= $errors['reg-email'] ?></p>
                 <?php endif ?>
             </div>
 

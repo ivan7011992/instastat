@@ -7,21 +7,20 @@ function CheckErrorsReg($data)
 
     $errors = [];
 
-    if (empty($data['reg-name'])) {
+    if (empty($_POST['reg-name'])) {
         $errors['reg-name'] = $Regresult = 'Введите инициалы';
     }
-    if (empty($data['reg-area'])) {
-        $errors['reg-area'] = $Regresult = 'Введите район проживания';
-    }
-    if (empty($data['reg-password'])) {
+
+    if (empty($_POST['reg-password'])) {
         $errors['reg-password'] = $Regresult = 'Введите пароль';
     }
-    if (empty($data['reg-email'])) {
+    if (empty($_POST['reg-email'])) {
         $errors['reg-email'] = 'Введите почту';
     }
-    if($data['password'] != $data['passwordConfirmation']) {
-
+    if($_POST['reg-password'] != $_POST['passwordConfirmation']) {
+     $errors['passwordConfirmation'] = 'Пароли не совпадают';
     }
+
 
     return $errors;
 }
@@ -33,9 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $formData = [
         'name' => $_POST['reg-name'],
-        'area' => $_POST['reg-area'],
         'password' => $_POST['reg-password'],
-        'passwordConfirmation' => $_POST['reg-password-confimation'],
+        'passwordConfirmation' => $_POST['passwordConfirmation'],
         'email' => $_POST['reg-email']
     ];
 

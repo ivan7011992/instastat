@@ -70,7 +70,8 @@ function checkAuth($con)
         return $errors;
     }
 
-    if (!password_verify($_POST['password'], $user['password'])) {
+      $password = password_hash($_POST['password'],PASSWORD_DEFAULT);
+    if (!password_verify($password, $user['password'])) {
         $errors['password'] = 'Неверный пароль';
         return $errors;
     }

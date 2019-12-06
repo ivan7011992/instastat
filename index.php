@@ -3,7 +3,7 @@ require_once ("init.php");
 require_once ("helpers.php");
 
 
-function checkErrorsAuth($con)
+function checkErrorsAuth()
 {
     $errors = [];
 
@@ -20,7 +20,7 @@ function checkErrorsAuth($con)
 
 function getUser($con, $email)
 {
-$sql = sprintf("SELECT * FROM users WHERE email = '%s'", $email);
+$sql = sprintf("SELECT * FROM app_users WHERE email = '%s'", $email);
 $result = mysqli_query($con, $sql);
 if (!$result) {
     $error = mysqli_error($con);
@@ -32,12 +32,12 @@ if (!$result) {
         case 0:
             return null;
         case 1:
+
             return $users[0];
         default:
             return null;
     }
 }
-
 function checkAuth($con)
 {
     $errors = checkErrorsAuth($con);
@@ -52,22 +52,30 @@ function checkAuth($con)
         return $errors;
     }
 
-    if (!password_verify($_POST['password'], $user['password'])) {
+    $password = password_hash($_POST['password'],PASSWORD_DEFAULT);
+    if (!password_verify($password, $user['password'])) {
         $errors['password'] = 'Неверный пароль';
         return $errors;
     }
 
-    session_start();
-    $_SESSION['user'] = $user;
-
-    exit();
 }
 
 $errors=[];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' ) {
-    $errors = checkErrorsAuth($con);
-    header("Location: /sucsess.php", true, 301);
+
+    $errors = checkAuth($con);
+    if(count($errors)=== 0){
+
+        session_start();
+        $_SESSION['user'] = $user;
+        header("Location: /sucsess.php", true, 301);}
+    else {
+
+        $errors=checkAuth($con);
+
+    }
+
 }
 
 
