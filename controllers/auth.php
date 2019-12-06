@@ -1,110 +1,84 @@
 <?php
-require_once('init.php');
-require_once('helpers.php');
+require_once("init.php");
+require_once("helpers.php");
 
-/**
- *
- * Валидация формы авторизиции.
- * @param $con
- * @return array
- */
-function checkErrorsAuth($con)
+class AuthForm{
+    /** @var string */
+    public $email;
+    /** @var string */
+    public $password;
+
+    public function __construct()
+    {
+        $this->email = $_POST['email'];
+        $this->password = $_POST['password'];
+    }
+}
+
+function checkErrorsAuth(AuthForm $formData)
 {
     $errors = [];
 
-    if (empty($_POST['email'])) {
+    if (empty($formData->email)) {
         $errors['email'] = 'Введите email';
     }
-    if (empty($_POST['password'])) {
+    if (empty($formData->password)) {
         $errors['password'] = 'Введите пароль';
     }
 
     return $errors;
 }
 
-/**
- * Получение  пользователя с заданным email.
- * @param $con
- * @param $email
- * @return |null
- */
+
 function getUser($con, $email)
 {
-    $sql = sprintf("SELECT * FROM users WHERE email = '%s'", $email);
+    $sql = sprintf("SELECT * FROM app_users WHERE email = '%s'", $email);
     $result = mysqli_query($con, $sql);
     if (!$result) {
         $error = mysqli_error($con);
         echo "Ошибка MySQL:" . $error;
         die;
     }
-
     $users = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-
     switch (count($users)) {
         case 0:
             return null;
         case 1:
+
             return $users[0];
         default:
             return null;
     }
 }
 
-/**
- * Расширенная проверка авторизации пользователя.
- * @param $con
- * @return array
- */
-function checkAuth($con)
-{
-    $errors = checkErrorsAuth($con);
-
-    if (count($errors) !== 0) {
-        return $errors;
-    }
-
-    $user = getUser($con, $_POST['email']);
-    if ($user === null) {
-        $errors['email'] = 'Пользователь с указанным email не найден';
-        return $errors;
-    }
-
-      $password = password_hash($_POST['password'],PASSWORD_DEFAULT);
-    if (!password_verify($password, $user['password'])) {
-        $errors['password'] = 'Неверный пароль';
-        return $errors;
-    }
-
-    session_start();
-    $_SESSION['user'] = $user;
-    header("Location: / index.php", true, 301);
-    exit();
-
-}
-
+session_start();
 $errors = [];
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $errors = checkAuth($con);
+
+    $formData = new AuthForm();
+
+    $errors = checkErrorsAuth($formData);
 
 
+    if (count($errors) === 0) {
+        $user = getUser($con, $formData->email);
+        if ($user !== null) {
+            if (password_verify($formData->password, $user['password'])) {
+                $_SESSION['user'] = $user;
+                header("Location: /index.php", true, 301);
+            } else {
+                $errors['password'] = 'Неверный пароль';
+            }
+        } else {
+            $errors['email'] = 'Пользователь с указанным email не найден';
+        }
+    }
 }
 
-//if (!empty($_POST['email'])){
-//    $email = $_POST['email']; } else{$email = null;}
-//if (!empty($_POST['password'])){
-//    $password = $_POST['password']; } else{$password = null;}
-
-
-
-
-$content = include_template('index.php', [
+$content = include_template('auth.php', [
     'errors' => $errors,
-    'password' => $_POST,
-    'email' => $_POST
-
+    'formData' => $formData
 ]);
-
-
 echo $content;

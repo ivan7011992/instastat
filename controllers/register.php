@@ -4,23 +4,21 @@ require_once("./../helpers.php");
 
 function CheckErrorsReg($data)
 {
-
     $errors = [];
 
-    if (empty($_POST['reg-name'])) {
-        $errors['reg-name'] = $Regresult = 'Введите инициалы';
+    if (empty($data['name'])) {
+        $errors['reg-name'] = 'Введите инициалы';
     }
 
-    if (empty($_POST['reg-password'])) {
-        $errors['reg-password'] = $Regresult = 'Введите пароль';
+    if (empty($data['password'])) {
+        $errors['reg-password'] = 'Введите пароль';
     }
-    if (empty($_POST['reg-email'])) {
+    if (empty($data['email'])) {
         $errors['reg-email'] = 'Введите почту';
     }
-    if($_POST['reg-password'] != $_POST['passwordConfirmation']) {
-     $errors['passwordConfirmation'] = 'Пароли не совпадают';
+    if ($data['regpassword'] != $data['passwordConfirmation']) {
+        $errors['passwordConfirmation'] = 'Пароли не совпадают';
     }
-
 
     return $errors;
 }
@@ -42,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (count($errors) === 0) {
         $stmt = db_get_prepare_stmt($con, "INSERT INTO app_users (name,password,email) VALUES (?,?,?)", [
             $formData['name'],
-            password_hash($formData['password'],PASSWORD_DEFAULT),
+            password_hash($formData['password'], PASSWORD_DEFAULT),
             $formData['email']
         ]);
         if (!$stmt) {
