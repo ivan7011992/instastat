@@ -15,11 +15,19 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
+<style>
+    form{
+      width: 20%;
+        margin-top: 45px;
+        margin-left: 10px;
 
+    }
+
+</style>
 
 </head>
 <body>
-<a href="controllers/register.php">Регистрация</a>
+<a href="./../controllers/register.php">Регистрация</a>
 
 
 <form method="POST" enctype="multipart/form-data" action="index.php">

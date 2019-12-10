@@ -1,6 +1,6 @@
 <?php
-require_once("init.php");
-require_once("helpers.php");
+require_once("./../init.php");
+require_once("./../helpers.php");
 
 class AuthForm{
     /** @var string */
@@ -53,7 +53,7 @@ function getUser($con, $email)
 
 session_start();
 $errors = [];
-
+$formData=[];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user !== null) {
             if (password_verify($formData->password, $user['password'])) {
                 $_SESSION['user'] = $user;
-                header("Location: /index.php", true, 301);
+                header("Location:index.php", true, 301);
             } else {
                 $errors['password'] = 'Неверный пароль';
             }

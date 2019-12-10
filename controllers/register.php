@@ -16,7 +16,7 @@ function CheckErrorsReg($data)
     if (empty($data['email'])) {
         $errors['reg-email'] = 'Введите почту';
     }
-    if ($data['regpassword'] != $data['passwordConfirmation']) {
+    if ($data['password'] != $data['passwordConfirmation']) {
         $errors['passwordConfirmation'] = 'Пароли не совпадают';
     }
 
