@@ -1,0 +1,80 @@
+{% extends 'base.twig' %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-6">
+
+
+            <form method="POST" enctype="multipart/form-data" action="/controllers/register.php"
+                  {% if errors|length > 0 %}class="was-validated"{% endif %}
+            >
+                <div class="form-group {% if  errors['reg-name'] is defined  %}has-error{% endif %}" >
+                    <label for="Name">Имя</label>
+                    <input name="reg-name"
+                           type="text"
+                           class="form-control"
+                           id="Name"
+                           aria-describedby="emailHelp"
+                           placeholder="Ввеите имя"
+                           value="{{ formData['name']|default('') }}">
+                    {% if errors['reg-name'] is defined %}
+                        <div class="invalid-feedback">{{ errors['reg-name'] }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input name='reg-password'
+                           type="password"
+                           class="form-control"
+                           id="password"
+                           placeholder="Введите пароль">
+                    {% if errors['reg-password'] is defined %}
+                        <p class="form_error"> {{ errors['reg-password'] }}</p>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="passwordConfirmation">Подтверждение пароля</label>
+                    <input name='passwordConfirmation'
+                           type="password"
+                           class="form-control"
+                           id="passwordConfirmation"
+                           placeholder="Введите пароль">
+                    {% if errors['passwordConfirmation'] is defined %}
+                        <p class="form_error"> {{ errors['passwordConfirmation'] }}</p>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input name='reg-email'
+                           type="email"
+                           class="form-control"
+                           id="email"
+                           placeholder="Введите email"
+                           value="{{ formData['email']|default('') }}">
+                    {% if errors['reg-email'] is defined %}
+                        <p class="form_error"> {{ errors['reg-email'] }}</p>
+                    {% endif %}
+                </div>
+
+                {% if errors is not empty %}
+                    <p class="error-message">Пожалуйста, исправьте ошибки в форме</p>
+                {% endif %}
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+
+            </form>
+
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+
+

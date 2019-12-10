@@ -30,7 +30,7 @@
 <a href="./../controllers/register.php">Регистрация</a>
 
 
-<form method="POST" enctype="multipart/form-data" action="index.php">
+<form method="POST" enctype="multipart/form-data" >
     <div class="form-group">
         <label for="exampleInputEmail1">Email address</label>
         <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"

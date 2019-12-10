@@ -67,7 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user !== null) {
             if (password_verify($formData->password, $user['password'])) {
                 $_SESSION['user'] = $user;
-                header("Location:index.php", true, 301);
+                header("Location: /index.php", true, 301);
+                exit;
             } else {
                 $errors['password'] = 'Неверный пароль';
             }

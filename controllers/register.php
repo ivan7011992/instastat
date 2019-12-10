@@ -1,6 +1,10 @@
 <?php
 require_once("./../init.php");
 require_once("./../helpers.php");
+require_once '../vendor/autoload.php';
+
+/** @var \Twig\Environment $twig */
+$twig = include_once '../twig.php';
 
 function CheckErrorsReg($data)
 {
@@ -54,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$content = include_template('register.php', [
+$content = $twig->render('register.twig', [
     'errors' => $errors,
     'formData' => $formData,
 ]);
