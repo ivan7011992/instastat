@@ -1,6 +1,10 @@
 <?php
 require_once("./../init.php");
 require_once("./../helpers.php");
+require_once '../vendor/autoload.php';
+
+/** @var \Twig\Environment $twig */
+$twig = include_once '../twig.php';
 
 class AuthForm{
     /** @var string */
@@ -78,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$content = include_template('auth.php', [
+$content = $twig ->render('auth.twig', [
     'errors' => $errors,
     'formData' => $formData
 ]);

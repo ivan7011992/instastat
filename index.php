@@ -25,6 +25,36 @@ function getprofile($con, $userid)
     return $profile;
 }
 
+function parseUserName(string $url, array &$errors): ?string
+{
+
+    $profile_link = parse_url($url);
+    if (!isset($profile_link['scheme'])) {
+        $errors['user_link'] = 'Неправильная ссылка';
+        return null;
+    }
+
+    if ($profile_link['scheme'] !== 'https') {
+        $errors['user_link'] = 'Неправильная ссылка';
+        return null;
+    }
+    if (!isset($profile_link['host'])) {
+        $errors['user_link'] = 'Неправильная ссылка';
+        return null;
+    }
+    if ($profile_link['host'] !== 'www.instagram.com') {
+        $errors['user_link'] = 'Неправильная ссылка';
+        return null;
+    }
+    $userName = trim($profile_link['path'], "/\t\n\r ");
+
+    if(strpos($userName, "/") !== false){
+        $errors['user_link'] = 'Неправильная ссылка';
+        return null;
+    }
+    return $userName;
+
+}
 
 session_start();
 
@@ -33,42 +63,45 @@ if (!array_key_exists('user', $_SESSION)) {
     exit;
 }
 
-$error = [];
-$formData=[];
+$errors = [];
+$formData = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $formData=[
+    $formData = [
         'user_link' => trim($_POST['user_link'])
     ];
 
     if (empty($formData['user_link'])) {
-        $error['user_link'] = 'Введите ссылку на профиль';
+        $errors['user_link'] = 'Введите ссылку на профиль';
     }
 
     // parse_url -извлечт имя пользователя из url https://www.instagram.com/hatch95/
-    $profile_link = $formData['user_link'];
-    $stmt = db_get_prepare_stmt($con, "INSERT INTO profile_link (account_name) VALUES (?)", [
-        $profile_link
-    ]);
-    if (!$stmt) {
-        $error = mysqli_error($con);
-        echo "Ошибка MySQL:" . $error;
-        die;
-    }
-    $insertResult = mysqli_stmt_execute($stmt);
-    if (!$insertResult) {
 
-        $error = mysqli_stmt_error($stmt);
-        echo "Ошибка MySQL:" . $error;
-        die;
+    $userName = parseUserName($formData['user_link'], $errors);
+    if ($userName !== null) {
+        $stmt = db_get_prepare_stmt($con, "INSERT INTO profile_link (account_name) VALUES (?)", [
+            $userName
+        ]);
+        if (!$stmt) {
+            $errors = mysqli_error($con);
+            echo "Ошибка MySQL:" . $errors;
+            die;
+        }
+        $insertResult = mysqli_stmt_execute($stmt);
+        if (!$insertResult) {
 
+            $errors = mysqli_stmt_error($stmt);
+            echo "Ошибка MySQL:" . $errors;
+            die;
+
+        }
     }
 }
-
 $profiles = getprofile($con, $_SESSION['user']['id']);
 
 $content = $twig->render('index.twig', [
     'formData' => $formData,
-    'profiles' => $profiles
+    'profiles' => $profiles,
+    'errors' =>$errors
 ]);
 echo $content;
 

@@ -1,5 +1,14 @@
 {% extends 'base.twig' %}
 
+{% block head %}
+    {{ parent() }}
+    <style>
+        .adf {
+
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
 
     <table>
@@ -17,7 +26,12 @@
             <input name="user_link" type="text" class="form-control" id="exampleInputEmail1"
                    aria-describedby="emailHelp"
                    placeholder="Enter email" value="{{ formData['user_link'] }}">
+            {% if errors['user_link'] is defined  %}
+                <p> {{ errors['user_link'] }}</p>
+            {% endif %}
         </div>
+
+
 
 
         <button type="submit" class="btn btn-primary">Submit</button>
