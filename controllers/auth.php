@@ -1,7 +1,8 @@
 <?php
-require_once("./../init.php");
+require_once ("./../db.php");
 require_once("./../helpers.php");
 require_once '../vendor/autoload.php';
+
 
 /** @var \Twig\Environment $twig */
 $twig = include_once '../twig.php';
@@ -34,16 +35,12 @@ function checkErrorsAuth(AuthForm $formData)
 }
 
 
-function getUser($con, $email)
+function getUser( $email)
 {
-    $sql = sprintf("SELECT * FROM app_users WHERE email = '%s'", $email);
-    $result = mysqli_query($con, $sql);
-    if (!$result) {
-        $error = mysqli_error($con);
-        echo "Ошибка MySQL:" . $error;
-        die;
-    }
-    $users = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    global $DB;
+    $users = $DB-> select("SELECT * FROM app_users WHERE email = '%s'", $email);
+
+
     switch (count($users)) {
         case 0:
             return null;
@@ -53,7 +50,10 @@ function getUser($con, $email)
         default:
             return null;
     }
+
 }
+
+
 
 session_start();
 $errors = [];
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     if (count($errors) === 0) {
-        $user = getUser($con, $formData->email);
+        $user = getUser( $formData->email);
         if ($user !== null) {
             if (password_verify($formData->password, $user['password'])) {
                 $_SESSION['user'] = $user;

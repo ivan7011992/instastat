@@ -1,28 +1,16 @@
 <?php
 require_once('helpers.php');
-require_once("init.php");
+require_once("db.php");
 require_once 'vendor/autoload.php';
 
 $twig = include_once 'twig.php';
 
-function getprofile($con, $userid)
+function getprofile($userid)
 {
-    $sql = "SELECT * FROM profile_link where user_id = $userid";
-    $result = mysqli_query($con, $sql);
-    if (!$result) {
-        $error = myqli_error($con);
-        echo "Ошибка MySQL" . $error;
-        die;
+    global $DB;
 
-    }
-    $results = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    $profile = [];
-
-    foreach ($results as $result) {
-        $profile[] = $results;
-
-    }
-    return $profile;
+    $results = $DB->select("SELECT * FROM profile_link where user_id = " . $userid);
+    return $results;
 }
 
 function parseUserName(string $url, array &$errors): ?string
@@ -48,7 +36,7 @@ function parseUserName(string $url, array &$errors): ?string
     }
     $userName = trim($profile_link['path'], "/\t\n\r ");
 
-    if(strpos($userName, "/") !== false){
+    if (strpos($userName, "/") !== false) {
         $errors['user_link'] = 'Неправильная ссылка';
         return null;
     }
@@ -78,30 +66,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $userName = parseUserName($formData['user_link'], $errors);
     if ($userName !== null) {
-        $stmt = db_get_prepare_stmt($con, "INSERT INTO profile_link (account_name) VALUES (?)", [
+        $DB->insert("INSERT INTO profile_link (account_name) VALUES (?)", [
             $userName
         ]);
-        if (!$stmt) {
-            $errors = mysqli_error($con);
-            echo "Ошибка MySQL:" . $errors;
-            die;
-        }
-        $insertResult = mysqli_stmt_execute($stmt);
-        if (!$insertResult) {
-
-            $errors = mysqli_stmt_error($stmt);
-            echo "Ошибка MySQL:" . $errors;
-            die;
-
-        }
     }
 }
-$profiles = getprofile($con, $_SESSION['user']['id']);
+$profiles = getprofile($_SESSION['user']['id']);
 
 $content = $twig->render('index.twig', [
     'formData' => $formData,
     'profiles' => $profiles,
-    'errors' =>$errors
+    'errors' => $errors
 ]);
 echo $content;
 

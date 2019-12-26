@@ -1,5 +1,5 @@
 <?php
-require_once("./../init.php");
+require_once("./../db.php");
 require_once("./../helpers.php");
 require_once '../vendor/autoload.php';
 
@@ -42,17 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = checkErrorsReg($formData);
 
     if (count($errors) === 0) {
-        $stmt = db_get_prepare_stmt($con, "INSERT INTO app_users (name,password,email) VALUES (?,?,?)", [
+        $DB->insert("INSERT INTO app_users (name,password,email) VALUES (?,?,?)", [
             $formData['name'],
             password_hash($formData['password'], PASSWORD_DEFAULT),
             $formData['email']
         ]);
-        if (!$stmt) {
-            $error = mysqli_error($con);
-            echo "Ошибка MySQL:" . $error;
-            die;
-        }
-        $insertResult = mysqli_stmt_execute($stmt);
+
         header("Location: /index.php", true, 301);
         exit;
     }
