@@ -2,7 +2,7 @@
 require_once ("./../db.php");
 require_once("./../helpers.php");
 require_once '../vendor/autoload.php';
-
+session_start();
 
 /** @var \Twig\Environment $twig */
 $twig = include_once '../twig.php';
@@ -38,7 +38,7 @@ function checkErrorsAuth(AuthForm $formData)
 function getUser( $email)
 {
     global $DB;
-    $users = $DB-> select("SELECT * FROM app_users WHERE email = '%s'", $email);
+    $users = $DB->select("SELECT * FROM app_users WHERE email = ?",[$email]);
 
 
     switch (count($users)) {
@@ -55,7 +55,6 @@ function getUser( $email)
 
 
 
-session_start();
 $errors = [];
 $formData=[];
 
@@ -79,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $errors['email'] = 'Пользователь с указанным email не найден';
         }
+
     }
 }
 
@@ -86,4 +86,7 @@ $content = $twig ->render('auth.twig', [
     'errors' => $errors,
     'formData' => $formData
 ]);
+
 echo $content;
+
+

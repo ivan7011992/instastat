@@ -5,11 +5,11 @@ require_once 'vendor/autoload.php';
 
 $twig = include_once 'twig.php';
 
-function getprofile($userid)
+function getProfileLinksForUser($userid)
 {
     global $DB;
 
-    $results = $DB->select("SELECT * FROM profile_link where user_id = " . $userid);
+    $results = $DB->select("SELECT * FROM profile_link where user_id = ? ", [$userid]);
     return $results;
 }
 
@@ -53,6 +53,7 @@ if (!array_key_exists('user', $_SESSION)) {
 
 $errors = [];
 $formData = [];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formData = [
         'user_link' => trim($_POST['user_link'])
@@ -65,19 +66,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // parse_url -извлечт имя пользователя из url https://www.instagram.com/hatch95/
 
     $userName = parseUserName($formData['user_link'], $errors);
+    $userid = $_SESSION['user']['id'];
+
+
     if ($userName !== null) {
-        $DB->insert("INSERT INTO profile_link (account_name) VALUES (?)", [
-            $userName
-        ]);
+        $existingAccounts = $DB->select('select id from profile_link where account_name=? 
+and user_id=?', [$userName, $userid]);
+
+        if (count($existingAccounts) > 0) {
+            $errors['user_link'] = 'Данный аккаунт уже добавлен';
+        } else {
+
+            $DB->insert("INSERT INTO profile_link (account_name,user_id) VALUES (?,?)", [
+                $userName,
+                $userid
+
+            ]);
+        }
     }
 }
-$profiles = getprofile($_SESSION['user']['id']);
+$profiles = getProfileLinksForUser($_SESSION['user']['id']);
+
 
 $content = $twig->render('index.twig', [
     'formData' => $formData,
     'profiles' => $profiles,
     'errors' => $errors
 ]);
+
+
 echo $content;
 
 

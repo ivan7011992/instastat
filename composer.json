@@ -1,6 +1,6 @@
 {
-    "require": {
-        "twig/twig": "^3.0",
-        "mgp25/instagram-php": "^7.0"
-    }
+  "require": {
+    "twig/twig": "^3.0",
+    "mgp25/instagram-php": "^7.0"
+  }
 }

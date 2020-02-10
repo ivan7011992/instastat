@@ -1,24 +1,6 @@
 {% extends 'base.twig' %}
 
-{% block head %}
-    {{ parent() }}
-    <style>
-        .adf {
-
-        }
-    </style>
-{% endblock %}
-
 {% block body %}
-
-    <table>
-        {% for profile in profiles %}
-            <tr>
-                {{ profile['user_link'] }}
-            </tr>
-        {% endfor %}
-    </table>
-
 
     <form method="POST" enctype="multipart/form-data" action="index.php">
         <div class="form-group">
@@ -26,16 +8,36 @@
             <input name="user_link" type="text" class="form-control" id="exampleInputEmail1"
                    aria-describedby="emailHelp"
                    placeholder="Enter email" value="{{ formData['user_link'] }}">
-            {% if errors['user_link'] is defined  %}
+            {% if errors['user_link'] is defined %}
                 <p> {{ errors['user_link'] }}</p>
             {% endif %}
         </div>
 
 
-
-
         <button type="submit" class="btn btn-primary">Submit</button>
 
     </form>
+
+    <h2>
+        Добавленные аккаунты
+    </h2>
+
+    {% if profiles|length > 0 %}
+        <table class="table">
+            {% for profile in profiles %}
+
+                <tr>
+                    <td>
+                        <a href="/controllers/instagram_account.php?account_name={{ profile['account_name'] }}">
+                            {{ profile['account_name'] }}
+                        </a>
+                    </td>
+                </tr>
+
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>sdfsdf</p>
+    {% endif %}
 
 {% endblock %}

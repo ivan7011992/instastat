@@ -1,3 +1,13 @@
+users (id)
+
+create table user_epd_status (
+    id,
+    user_id,
+    status ENUM('no_send', 'by_email', 'by_fiz')
+)
+
+insert into user_epd_status(user_id, status) select id, 'no_send' from users;
+
 <html>
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"

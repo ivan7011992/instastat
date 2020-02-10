@@ -1,0 +1,42 @@
+{% extends 'base.twig' %}
+
+
+{% block body %}
+
+    {% if accountData is null %}
+        <h2>Нет данных о аккаунте</h2>
+    {% else %}
+
+        <h2> Аккаунт </h2>
+        <table>
+
+            <tr>
+                <td><img style="border-radius:50%" src="{{ accountData['account']['avatar_url'] }}"></td>
+                <td> {{ instagramAccount['account']['login'] }}</td>
+                <td> {{ instagramAccount['account']['followers_count'] }}</td>
+                <td>  {{ instagramAccount['account']['follower_count'] }}</td>
+
+            </tr>
+
+        </table>
+
+        <h2> Посты пользователя </h2>
+
+        <table>
+            {% for media in accountData['medias'] %}
+                <tr>
+                    <td><img style="max-width:400px" src=" {{ media['image_url'] }}"></td>
+                    <td>  {{ media['likes_count'] }}</td>
+                    <td>  {{ media['comments_count'] }}</td>
+                    <td>  {{ media['description'] }}</td>
+
+
+                </tr>
+            {% endfor %}
+        </table>
+
+    {% endif %}
+
+
+
+{% endblock %}
